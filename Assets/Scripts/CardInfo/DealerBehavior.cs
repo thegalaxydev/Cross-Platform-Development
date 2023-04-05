@@ -103,11 +103,6 @@ public class DealerBehavior : MonoBehaviour
         deck.RemoveAt(1);
     }
 
-    private void DisplayMessage(string message)
-    {
-        
-    }
-
     /// <summary>
     /// Resets and re-initializes the Deck.
     /// </summary>
