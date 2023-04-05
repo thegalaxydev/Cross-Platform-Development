@@ -158,8 +158,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 9.600098}
-  m_SizeDelta: {x: 100, y: 140}
+  m_AnchoredPosition: {x: 0, y: -138}
+  m_SizeDelta: {x: 200, y: 280}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &210780694
 MonoBehaviour:
@@ -272,8 +272,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 358, y: -96}
-  m_SizeDelta: {x: 100, y: 140}
+  m_AnchoredPosition: {x: 141, y: -234.00005}
+  m_SizeDelta: {x: 200, y: 280}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &301012343
 GameObject:
@@ -390,8 +390,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -96}
-  m_SizeDelta: {x: 100, y: 140}
+  m_AnchoredPosition: {x: 127, y: -234}
+  m_SizeDelta: {x: 200, y: 280}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &309821453
 MonoBehaviour:
@@ -734,7 +734,7 @@ MonoBehaviour:
   _dealerCardBase: {fileID: 309821451}
   _playerCardBase: {fileID: 210780692}
   _dealerHiddenBase: {fileID: 214302769}
-  _cardBase: {fileID: 8257069061742130011, guid: fd673a2092ac3bc4f9f8466faa6d9cfd, type: 3}
+  _cardBase: {fileID: 8460057965240331966, guid: 17b5fb48075fb8243b047fe37d49e7dc, type: 3}
   _startButton: {fileID: 994989958}
   _standButton: {fileID: 714982200}
   _hitButton: {fileID: 327812786}
