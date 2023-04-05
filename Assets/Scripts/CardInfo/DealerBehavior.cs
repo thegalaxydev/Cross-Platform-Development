@@ -14,12 +14,16 @@ public class DealerBehavior : MonoBehaviour
     private List<GameObject> _playerCardImages = new List<GameObject>();
 
     [SerializeField]
-    private Texture2D[] _cardTextures;
+    private Sprite[] _cardTextures;
+    [SerializeField]
+    private Sprite _cardBackImage;
 
     [SerializeField]
     private GameObject _dealerCardBase;
     [SerializeField]
     private GameObject _playerCardBase;
+    [SerializeField]
+    private GameObject _dealerHiddenBase;
 
     [SerializeField]
     private GameObject _cardBase;
@@ -31,8 +35,13 @@ public class DealerBehavior : MonoBehaviour
     [SerializeField]
     private Button _hitButton;
 
+    [SerializeField]
+    private MessageBehavior _messageHolder;
+
     private int _dealerCount;
     private int _playerCount;
+
+    private GameObject _dealerHiddenCard;
 
 
     private Card _dealerHidden;
@@ -57,7 +66,46 @@ public class DealerBehavior : MonoBehaviour
 
         _playerCardImages.Add(newCard);
         deck.RemoveAt(1);
+    }
 
+    /// <summary>
+    /// Adds a new card to the dealer and displays it on screen.
+    /// </summary>
+    private void AddCardToDealer()
+    {
+        _dealerCount += deck[1].Number;
+        _dealerCards.Add(deck[1]);
+
+        GameObject newCard = Instantiate(_cardBase, _dealerCardBase.transform);
+
+        newCard.transform.localPosition = Vector3.zero + new Vector3(25 * _dealerCardImages.Count, 0, 0);
+
+        newCard.GetComponent<Image>().sprite = deck[1].Texture;
+
+        _dealerCardImages.Add(newCard);
+        deck.RemoveAt(1);
+    }
+
+    /// <summary>
+    /// Sets the hidden card of the dealer and displays it face down.
+    /// </summary>
+    private void SetDealerHidden()
+    {
+        _dealerHidden = deck[1];
+
+        GameObject newCard = Instantiate(_cardBase, _dealerHiddenBase.transform);
+
+        newCard.transform.localPosition = Vector3.zero;
+
+        newCard.GetComponent<Image>().sprite = _cardBackImage;
+
+        _dealerHiddenCard = newCard;
+        deck.RemoveAt(1);
+    }
+
+    private void DisplayMessage(string message)
+    {
+        
     }
 
     /// <summary>
@@ -67,6 +115,24 @@ public class DealerBehavior : MonoBehaviour
     {
         // clear the list so it can be reinitialized
         deck.Clear();
+        
+
+        // clear the player's cards
+        for (int i = 0; i < _playerCardImages.Count; i++)
+        {
+            GameObject card = _playerCardImages[i];
+            
+            Destroy(card);
+        }
+        _playerCardImages.Clear();
+
+        // clear the dealer's cards
+        for (int i = 0; i < _dealerCardImages.Count; i++)
+        {
+            GameObject card = _dealerCardImages[i]; 
+            Destroy(card);
+        }
+        _dealerCardImages.Clear();
 
         // reset the player and dealer total
         _playerCount = 0;
@@ -74,21 +140,21 @@ public class DealerBehavior : MonoBehaviour
         _dealerCount = 0;
 
         int cardNumber = 1;
-        int suite = 1;
+        int suit = 1;
 
-        // create a new instance for each card number from each suite
+        // create a new instance for each card number from each suit
         for (int i = 0; i < 52; i++)
         {
             if (cardNumber > 13)
             {
                 cardNumber = 1;
-                suite++;
+                suit++;
             }
 
-            if (suite > 4)
+            if (suit > 4)
                 break;
 
-            deck.Add(new Card(cardNumber, suite, _cardTextures[i]));
+            deck.Add(new Card(cardNumber <= 10 ? cardNumber : 10, suit, _cardTextures[i]));
 
             cardNumber++;
         }
@@ -102,6 +168,7 @@ public class DealerBehavior : MonoBehaviour
     public void Deal()
     {
         InitDeck();
+        _messageHolder.HideMessage();
         _startButton.gameObject.SetActive(false);
 
         _hitButton.interactable = true;
@@ -109,13 +176,11 @@ public class DealerBehavior : MonoBehaviour
 
         AddCardToPlayer();
 
-        _dealerHidden = deck[1];
-        deck.RemoveAt(1);
+        SetDealerHidden();
 
         AddCardToPlayer();
 
-        _dealerCount += deck[1].Number;
-        deck.RemoveAt(1);
+        AddCardToDealer();
     }
 
     /// <summary>
@@ -128,6 +193,8 @@ public class DealerBehavior : MonoBehaviour
         // If the player's count is over 21, they lose.
         if (_playerCount > 21)
         {
+            _messageHolder.ShowMessage();
+            _messageHolder.SetMessage("PLAYER BUST - DEALER WIN");
             _standButton.interactable = false;
             _hitButton.interactable = false;
 
@@ -138,6 +205,8 @@ public class DealerBehavior : MonoBehaviour
         // If the player's count is equal to 21, they win blackjack.
         else if (_playerCount == 21)
         {
+            _messageHolder.ShowMessage();
+            _messageHolder.SetMessage("BLACKJACK - PLAYER WIN");
             _standButton.interactable = false;
             _hitButton.interactable = false;
 
@@ -154,26 +223,28 @@ public class DealerBehavior : MonoBehaviour
     public void Stand()
     {
         _dealerCount += _dealerHidden.Number;
+        _dealerHiddenCard.GetComponent<Image>().sprite = _dealerHidden.Texture;
 
         // Continuously deal until they reach a win or loss outcome.
         while(_dealerCount < 21 && _dealerCount < _playerCount)
         {
-            _dealerCount += deck[1].Number;
-            deck.RemoveAt(1);
+            AddCardToDealer();
         }
+
+        _messageHolder.ShowMessage();
 
         // Determine the outcome of the draw.
         if (_dealerCount > 21)
         {
-
+            _messageHolder.SetMessage("DEALER BUST - PLAYER WIN");
         }
         else if (_dealerCount > _playerCount || _dealerCount == 21)
         {
-
+            _messageHolder.SetMessage("DEALER WIN");
         }
         else
         {
-
+            _messageHolder.SetMessage("PLAYER WIN");
         }
 
         // reset the game
